@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="56642656-1a16-4cd3-8741-c3ab8cb63c4c" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="f5caa9e7-0ff7-495e-8ece-bddecf439ba3" >
+		<db:my-sql-connection host="iltdb.learn.mulesoft.com" port="3306" user="mule" password="mule" database="training" />
+	</db:config>
+	<db:config name="Database_Config1" doc:name="Database Config" doc:id="85951ef2-d421-4233-87b9-24e8e27d7fab" >
+		<db:my-sql-connection port="8081" user="mule" password="mule" database="training" host="iltdb.learn.mulesoft.com"/>
+	</db:config>
+	<http:listener-config name="HTTP_Listener_config1" doc:name="HTTP Listener config" doc:id="4439d4ae-f9ef-4676-8732-2c67d1004f74" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<http:listener-config name="HTTP_Listener_config2" doc:name="HTTP Listener config" doc:id="16df493a-8c33-4849-9e98-62adb30de005" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<db:config name="Database_Config2" doc:name="Database Config" doc:id="201f9220-2ada-4646-ad22-32a357b07e09" >
+		<db:my-sql-connection port="8081" user="mule" password="mule" database="training" host="iltdb.learn.mulesoft.com"/>
+	</db:config>
+	<db:config name="Database_Config3" doc:name="Database Config" doc:id="458fcb63-4cdc-4d3a-8b31-1dcfba0f34a6" >
+		<db:my-sql-connection port="8081" user="mule" password="mule" database="training" host="iltdb.learn.mulesoft.com"/>
+	</db:config>
+	<flow name="implementationFlow" doc:id="33bea586-57f0-4543-ae8b-b470a8251978" >
+		<db:select doc:name="Select" doc:id="ee70e747-8a72-488d-aa65-92a77ea5b119" config-ref="Database_Config2">
+			<db:sql ><![CDATA[SELECT * FROM american]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="3376f160-baa6-4c2b-b22c-64b69d8247ac" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="Copy_of_implementationFlow" doc:id="c088020a-4b70-4236-a53f-c31f5fe21669" >
+		<db:select doc:name="Copy_of_Select" doc:id="91dbbc3a-93db-4312-ad7e-b1df83dcc5c9" config-ref="Database_Config3">
+			<db:sql ><![CDATA[SELECT * FROM american]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{ID:attributes.uriParams.ID}]]]></db:input-parameters>
+		</db:select>
+		<ee:transform doc:name="Copy_of_Transform Message" doc:id="73ecab9b-b47e-41de-adf3-978cab9b4ee4" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="POSTFLIGHTS" doc:id="1a89900a-a9c5-458d-b8d8-2e8f9ada6ee4" >
+		<set-payload value="Flight added but not really!!" doc:name="Set Payload" doc:id="0c16e37a-6b8a-4d73-8dd7-3805c9564816" />
+	</flow>
+</mule>
